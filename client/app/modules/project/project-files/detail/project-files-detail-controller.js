@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope, $rootScope, $timeout, file, $mdDialog, uploadService, fileService, $mdToast, peopleService, $stateParams, messageService, taskService, $state, people, socket, notificationService, tenders, dialogService, activities) {
+angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope, $rootScope, $timeout, file, $mdDialog, uploadService, fileService, $mdToast, peopleService, $stateParams, messageService, taskService, $state, people, socket, notificationService, dialogService, activities) {
     $scope.hasPrivilageInProjectMember = $rootScope.checkPrivilageInProjectMember(people);
 
     // dynamic height for reversion file thumbnail
@@ -24,9 +24,6 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
                 }],
                 people: ["peopleService", "$stateParams", function(peopleService, $stateParams) {
                     return peopleService.getInvitePeople({id: $stateParams.id}).$promise;
-                }],
-                tenders: ["tenderService", "$stateParams", function(tenderService, $stateParams) {
-                    return tenderService.getAll({id: $stateParams.id}).$promise;
                 }],
                 activities: ["activityService", "$stateParams", function(activityService, $stateParams) {
                     return activityService.me({id: $stateParams.id}).$promise;
@@ -157,7 +154,6 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
     filterUnreadActivites($scope.file);
     checkAcknowLedgement($scope.file);
     
-    $scope.people = people;
     $scope.currentUser = $rootScope.currentUser;
 
     socket.emit("join", file._id);
@@ -228,93 +224,12 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
 
     /*Get project members list and file tags list*/
     function getProjectMembersOrTenderers() {
-        $scope.tender = tenders[0];
-        $scope.membersList = [];
+        $scope.membersList = $rootScope.getProjectMembers(people);
         $scope.tags = [];
         _.each($rootScope.currentTeam.fileTags, function(tag) {
             $scope.tags.push({name: tag, select: false});
         });
-        // if ($rootScope.isEditFile) {
-        //     _.each($scope.file.tags, function(tag) {
-        //         var tagIndex = _.findIndex($scope.tags, function(t) {
-        //             return t.name===tag;
-        //         });
-        //         if (tagIndex !== -1) {
-        //             $scope.tags[tagIndex].select = true;
-        //         }
-        //     });
-        // }
-        if (!$scope.tender || $scope.tender.owner._id==$rootScope.currentUser._id) {
-            _.each($rootScope.roles, function(role) {
-                _.each($scope.people[role], function(tender){
-                    if (tender.hasSelect) {
-                        var isLeader = (_.findIndex(tender.tenderers, function(tenderer) {
-                            if (tenderer._id) {
-                                return tenderer._id._id.toString() === $rootScope.currentUser._id.toString();
-                            }
-                        }) !== -1) ? true : false;
-                        if (!isLeader) {
-                            _.each(tender.tenderers, function(tenderer) {
-                                var memberIndex = _.findIndex(tenderer.teamMember, function(member) {
-                                    return member._id.toString() === $rootScope.currentUser._id.toString();
-                                });
-                                if (memberIndex !== -1) {
-                                    _.each(tenderer.teamMember, function(member) {
-                                        member.select = false;
-                                        $scope.membersList.push(member);
-                                    });
-                                }
-                            });
-                            if (tender.tenderers[0]._id) {
-                                tender.tenderers[0]._id.select = false;
-                                $scope.membersList.push(tender.tenderers[0]._id);
-                            } else {
-                                $scope.membersList.push({email: tender.tenderers[0].email, select: false});
-                            }
-                        } else {
-                            _.each(tender.tenderers, function(tenderer) {
-                                if (tenderer._id._id.toString() === $rootScope.currentUser._id.toString()) {
-                                    _.each(tenderer.teamMember, function(member) {
-                                        member.select = false;
-                                        $scope.membersList.push(member);
-                                    });
-                                }
-                            });
-                        }
-                    }
-                });
-            });
-        } else {
-            $scope.membersList.push(people[$scope.tender.ownerType][0].tenderers[0]._id);
-            _.each(people[$scope.tender.ownerType][0].tenderers[0].teamMember, function(member) {
-                $scope.membersList.push(member);
-            });
-            var currentTenderIndex = _.findIndex($scope.tender.members, function(member) {
-                if (member.user) {
-                    return member.user._id==$rootScope.currentUser._id;
-                }
-            });
-            if (currentTenderIndex !== -1) {
-                $scope.membersList.push($scope.tender.members[currentTenderIndex].user);
-                if ($scope.tender.members[currentTenderIndex].teamMember) {
-                    _.each($scope.tender.members[currentTenderIndex].teamMember, function(member) {
-                        $scope.membersList.push(member);
-                    });
-                }
-            } else {
-                _.each($scope.tender.members, function(member) {
-                    var memberIndex = _.findIndex(member.teamMember, function(teamMember) {
-                        return teamMember._id.toString() === $rootScope.currentUser._id.toString();
-                    });
-                    if (memberIndex !== -1) {
-                        _.each(member.teamMember, function(teamMember) {
-                            $scope.membersList.push(teamMember);
-                        });
-                        $scope.membersList.push(member.user);
-                    }
-                });
-            } 
-        }
+        
         // get unique member 
         $scope.membersList = _.uniq($scope.membersList, "_id");
 
@@ -325,6 +240,9 @@ angular.module('buiiltApp').controller('projectFileDetailCtrl', function($scope,
 
         // remove current user from the members list
         _.remove($scope.membersList, {_id: $rootScope.currentUser._id});
+
+        // remove the file owner from available assignees
+        _.remove($scope.membersList, {_id: $scope.file.owner._id})
 
         // get invitees for related item
         $scope.invitees = angular.copy($scope.file.members);
