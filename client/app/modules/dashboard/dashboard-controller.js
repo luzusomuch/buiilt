@@ -476,7 +476,7 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     $scope.next = function(type) {
         if (type!=="activity") {
             if ($scope.step === 1) {
-                if ($scope.selectedProjectIndex) {
+                if ($scope.selectedProjectIndex || $scope.selectedProjectIndex===0) {
                     $scope.step += 1;
                 } else {
                     dialogService.showToast("Please Select a Project");
@@ -734,47 +734,8 @@ angular.module('buiiltApp').controller('dashboardCtrl', function($rootScope, $sc
     function getProjectMembers(id) {
         $scope.selectedProjectId = id;
         peopleService.getInvitePeople({id: id}).$promise.then(function(res) {
-            $scope.projectMembers = [];
-            _.each($rootScope.roles, function(role) {
-                _.each(res[role], function(tender){
-                    if (tender.hasSelect) {
-                        var isLeader = (_.findIndex(tender.tenderers, function(tenderer) {
-                            if (tenderer._id) {
-                                return tenderer._id._id.toString() === $rootScope.currentUser._id.toString();
-                            }
-                        }) !== -1) ? true : false;
-                        if (!isLeader) {
-                            _.each(tender.tenderers, function(tenderer) {
-                                var memberIndex = _.findIndex(tenderer.teamMember, function(member) {
-                                    return member._id.toString() === $rootScope.currentUser._id.toString();
-                                });
-                                if (memberIndex !== -1) {
-                                    _.each(tenderer.teamMember, function(member) {
-                                        member.select = false;
-                                        $scope.projectMembers.push(member);
-                                    });
-                                }
-                            });
-                            if (tender.tenderers[0]._id) {
-                                tender.tenderers[0]._id.select = false;
-                                $scope.projectMembers.push(tender.tenderers[0]._id);
-                            } else {
-                                $scope.projectMembers.push({email: tender.tenderers[0].email, select: false});
-                            }
-                        } else {
-                            $scope.projectMembers.push(tender.tenderers[0]._id);
-                            _.each(tender.tenderers, function(tenderer) {
-                                if (tenderer._id._id.toString() === $rootScope.currentUser._id.toString()) {
-                                    _.each(tenderer.teamMember, function(member) {
-                                        member.select = false;
-                                        $scope.projectMembers.push(member);
-                                    });
-                                }
-                            });
-                        }
-                    }
-                });
-            });
+            $scope.projectMembers = $rootScope.getProjectMembers(res);
+            
             if ($rootScope.isRemoveCurrentUser) {
                 _.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
             }
