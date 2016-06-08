@@ -57,24 +57,30 @@ exports.me = function(req, res) {
                             cb();
                         } else {
                             var isOwnerTeam = false;
-                            if (document.owner._id.toString()!==req.user._id.toString()) {
-                                _.each(roles, function(role) {
-                                    _.each(people[role], function(tender) {
-                                        if (tender.tenderers[0]._id && tender.tenderers[0]._id.toString()===document.owner._id.toString() && tender.tenderers[0]._id.toString()===req.user._id.toString()) {
-                                            isOwnerTeam = true;
-                                            return false;
-                                        } else if (tender.tenderers[0].teamMember.indexOf(req.user._id.toString()) !== -1 && (tender.tenderers[0]._id && tender.tenderers[0]._id.toString()===document.owner._id.toString())) {
-                                            isOwnerTeam = true;
+                            _.each(roles, function(role) {
+                                _.each(people[role], function(tender) {
+                                    if (tender.hasSelect && tender.tenderers[0]._id) {
+                                        var currentTeamMembers = tender.tenderers[0].teamMember;
+                                        currentTeamMembers.push(tender.tenderers[0]._id);
+
+                                        var index = _.findIndex(currentTeamMembers, function(member) {
+                                            return member.toString()===document.owner._id.toString();
+                                        });
+                                        if (index !== -1) {
+                                            _.each(currentTeamMembers, function(member) {
+                                                if (member.toString()===req.user._id.toString()) {
+                                                    isOwnerTeam = true;
+                                                    return false;
+                                                }
+                                            });
                                             return false;
                                         }
-                                    });
-                                    if (isOwnerTeam) {
-                                        return false;
                                     }
                                 });
-                            } else if (document.owner._id.toString()===req.user._id.toString()) {
-                                isOwnerTeam = true;
-                            }
+                                if (isOwnerTeam) {
+                                    return false;
+                                }
+                            });
                             if (!isOwnerTeam) {
                                 document.members = [];
                                 document.notMembers = [];

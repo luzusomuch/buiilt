@@ -156,6 +156,35 @@ angular
         return allow;
     };
 
+    $rootScope.checkIsOwnerTeam = function(people, owner) {
+        var isOwnerTeam = false;
+        _.each($rootScope.roles, function(role) {
+            _.each(people[role], function(tender) {
+                if (tender.hasSelect && tender.tenderers[0]._id) {
+                    var currentTeamMembers = tender.tenderers[0].teamMember;
+                    currentTeamMembers.push(tender.tenderers[0]._id);
+
+                    var index = _.findIndex(currentTeamMembers, function(member) {
+                        return member._id.toString()===owner._id.toString();
+                    });
+                    if (index !== -1) {
+                        _.each(currentTeamMembers, function(member) {
+                            if (member._id.toString()===$rootScope.currentUser._id.toString()) {
+                                isOwnerTeam = true;
+                                return false;
+                            }
+                        });
+                        return false;
+                    }
+                }
+            });
+            if (isOwnerTeam) {
+                return false;
+            }
+        });
+        return isOwnerTeam;
+    };
+
     $rootScope.getProjectMembers = function(people) {
         var membersList = [];
         _.each($rootScope.roles, function(role) {
@@ -182,7 +211,7 @@ angular
                             tender.tenderers[0]._id.select = false;
                             membersList.push(tender.tenderers[0]._id);
                         } else {
-                            membersList.push({email: tender.tenderers[0].email, select: false});
+                            membersList.push({email: tender.tenderers[0].email, name: tender.tenderers[0].name, phoneNumber: tender.tenderers[0].phoneNumber, select: false});
                         }
                     } else {
                         _.each(tender.tenderers, function(tenderer) {

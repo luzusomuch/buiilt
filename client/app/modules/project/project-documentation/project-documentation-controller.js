@@ -101,48 +101,11 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
 
     /*Get project members list*/
     function getProjectMembers() {
-        $scope.projectMembers = [];
-        _.each($rootScope.roles, function(role) {
-            _.each(people[role], function(tender){
-                if (tender.hasSelect) {
-                    var isLeader = (_.findIndex(tender.tenderers, function(tenderer) {
-                        if (tenderer._id) {
-                            return tenderer._id._id.toString() === $rootScope.currentUser._id.toString();
-                        }
-                    }) !== -1) ? true : false;
-                    if (!isLeader) {
-                        _.each(tender.tenderers, function(tenderer) {
-                            var memberIndex = _.findIndex(tenderer.teamMember, function(member) {
-                                return member._id.toString() === $rootScope.currentUser._id.toString();
-                            });
-                            if (memberIndex !== -1) {
-                                _.each(tenderer.teamMember, function(member) {
-                                    member.select = false;
-                                    $scope.projectMembers.push(member);
-                                });
-                            }
-                        });
-                        if (tender.tenderers[0]._id) {
-                            tender.tenderers[0]._id.select = false;
-                            $scope.projectMembers.push(tender.tenderers[0]._id);
-                        } else {
-                            $scope.projectMembers.push({email: tender.tenderers[0].email, name: tender.tenderers[0].name, phoneNumber: tender.tenderers[0].phoneNumber, select: false});
-                        }
-                    } else {
-                        $scope.projectMembers.push(tender.tenderers[0]._id);
-                        _.each(tender.tenderers, function(tenderer) {
-                            if (tenderer._id._id.toString() === $rootScope.currentUser._id.toString()) {
-                                _.each(tenderer.teamMember, function(member) {
-                                    member.select = false;
-                                    $scope.projectMembers.push(member);
-                                });
-                            }
-                        });
-                    }
-                }
-            });
-        });
+        $scope.projectMembers = $rootScope.getProjectMembers(people);
+
+        // remove current user from available assignees
         _.remove($scope.projectMembers, {_id: $rootScope.currentUser._id});
+        // this is used for edit document set
         if ($rootScope.selectedDocumentSet && !$rootScope.isCopyDocumentSet) {
             _.each($rootScope.selectedDocumentSet.members, function(member) {
                 if (member._id) 
@@ -150,7 +113,13 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
             });
             _.each($rootScope.selectedDocumentSet.notMembers, function(email) {
                 _.remove($scope.projectMembers, {email: email});
-            })
+            });
+            // remove the selected document owner from available assignees
+            _.remove($scope.projectMembers, {_id: $rootScope.selectedDocumentSet.owner._id});
+
+            // Check if current user is belong to created team
+            $scope.isOwnerTeam = $rootScope.checkIsOwnerTeam(people, $rootScope.selectedDocumentSet.owner);
+            // End Check
         }
     };
     getProjectMembers();
@@ -492,7 +461,7 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
     };
 
     $scope.updateSetOfDocument = function(form) {
-        if (!$scope.hasPrivilageInProjectMember || $rootScope.selectedDocumentSet.archive) {
+        if (!$scope.hasPrivilageInProjectMember || $rootScope.selectedDocumentSet.archive || !$scope.isOwnerTeam) {
             return dialogService.showToast("Not Allow");
         }
         if (form.$valid) {
