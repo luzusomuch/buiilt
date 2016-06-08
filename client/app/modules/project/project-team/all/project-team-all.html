@@ -253,21 +253,6 @@
                     </md-list-item>
                 </md-list>
             </div>
-
-            <md-list flex class="content-list" ng-show="membersList.length === 0">
-                <md-list-item class="md-2-line">
-                    <div class="md-list-item-text" layout-margin>
-                        <h3>{{tender.owner.name}}</h3>
-                        <h4>{{tender.owner.phoneNumber}} - {{tender.owner.email}}</h4>
-                    </div>
-                </md-list-item>
-                <md-list-item ng-repeat="member in internalTeam" class="md-2-line">
-                    <div class="md-list-item-text" layout-margin>
-                        <h3>{{member.name}}</h3>
-                        <h4>{{(member.phoneNumber)? member.phoneNumber : 'No Phone Number on File'}} - {{(member.email) ? member.email : 'No Email Address on File'}}</h4>
-                    </div>
-                </md-list-item>
-            </md-list>
 		</div>
 	</div>
 </div>

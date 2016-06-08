@@ -1,4 +1,4 @@
-angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $scope, $timeout, $mdDialog, peopleService, $mdToast, $stateParams, userService, people, $state, dialogService, contactBooks, tenders) {
+angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $scope, $timeout, $mdDialog, peopleService, $mdToast, $stateParams, userService, people, $state, dialogService, contactBooks) {
     $scope.people = people;
     $scope.dialogService = dialogService;
     $scope.invite = {
@@ -108,10 +108,10 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
 
     /*Get all project members*/
 	function loadProjectMembers() {
-        $scope.tender = tenders[0];
+        console.log($scope.people);
         $scope.membersList = [];
         /*If current user is project manager, add himself to project members list*/
-        if (!$scope.tender || ($scope.tender.winner && $scope.tender.winner._id.toString()===$rootScope.currentUser._id.toString()) || $scope.people.project.projectManager._id.toString()===$rootScope.currentUser._id.toString()) {
+        // if (!$scope.tender || ($scope.tender.winner && $scope.tender.winner._id.toString()===$rootScope.currentUser._id.toString()) || $scope.people.project.projectManager._id.toString()===$rootScope.currentUser._id.toString()) {
             if ($scope.people.project.projectManager._id.toString()===$rootScope.currentUser._id.toString()) {
                 var role = ($scope.people.project.projectManager.type === "builder") ? "builders" : "architects";
                 $scope.membersList.push({_id: $rootScope.currentUser._id, name: $rootScope.currentUser.name, email: $rootScope.currentUser.email, phoneNumber: ($rootScope.currentUser.phoneNumber) ? $rootScope.currentUser.phoneNumber : null, type: $rootScope.currentUser.type});
@@ -202,44 +202,44 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                 });
             });
             // end check
-        } else {
-            /*Add tender owner, his team and tenderer, his team to project member*/
-            $scope.people[$scope.tender.ownerType][0].tenderers[0]._id.type = $scope.tender.ownerType;
-            $scope.membersList.push($scope.people[$scope.tender.ownerType][0].tenderers[0]._id);
-            _.each($scope.people[$scope.tender.ownerType][0].tenderers[0].teamMember, function(member) {
-                member.type = $scope.tender.ownerType;
-                $scope.membersList.push(member);
-            });
-            var currentTenderIndex = _.findIndex($scope.tender.members, function(member) {
-                if (member.user) {
-                    return member.user._id==$rootScope.currentUser._id;
-                }
-            });
-            if (currentTenderIndex !== -1) {
-                $scope.tender.members[currentTenderIndex].user.type = $scope.tender.type;
-                $scope.membersList.push($scope.tender.members[currentTenderIndex].user);
-                if ($scope.tender.members[currentTenderIndex].teamMember) {
-                    _.each($scope.tender.members[currentTenderIndex].teamMember, function(member) {
-                        member.type = $scope.tender.type;
-                        $scope.membersList.push(member);
-                    });
-                }
-            } else {
-                _.each($scope.tender.members, function(member) {
-                    var memberIndex = _.findIndex(member.teamMember, function(teamMember) {
-                        return teamMember._id.toString() === $rootScope.currentUser._id.toString();
-                    });
-                    if (memberIndex !== -1) {
-                        _.each(member.teamMember, function(teamMember) {
-                            teamMember.type = $scope.tender.type;
-                            $scope.membersList.push(teamMember);
-                        });
-                        member.user.type = $scope.type;
-                        $scope.membersList.push(member.user);
-                    }
-                });
-            }
-        }
+        // } else {
+        //     /*Add tender owner, his team and tenderer, his team to project member*/
+        //     $scope.people[$scope.tender.ownerType][0].tenderers[0]._id.type = $scope.tender.ownerType;
+        //     $scope.membersList.push($scope.people[$scope.tender.ownerType][0].tenderers[0]._id);
+        //     _.each($scope.people[$scope.tender.ownerType][0].tenderers[0].teamMember, function(member) {
+        //         member.type = $scope.tender.ownerType;
+        //         $scope.membersList.push(member);
+        //     });
+        //     var currentTenderIndex = _.findIndex($scope.tender.members, function(member) {
+        //         if (member.user) {
+        //             return member.user._id==$rootScope.currentUser._id;
+        //         }
+        //     });
+        //     if (currentTenderIndex !== -1) {
+        //         $scope.tender.members[currentTenderIndex].user.type = $scope.tender.type;
+        //         $scope.membersList.push($scope.tender.members[currentTenderIndex].user);
+        //         if ($scope.tender.members[currentTenderIndex].teamMember) {
+        //             _.each($scope.tender.members[currentTenderIndex].teamMember, function(member) {
+        //                 member.type = $scope.tender.type;
+        //                 $scope.membersList.push(member);
+        //             });
+        //         }
+        //     } else {
+        //         _.each($scope.tender.members, function(member) {
+        //             var memberIndex = _.findIndex(member.teamMember, function(teamMember) {
+        //                 return teamMember._id.toString() === $rootScope.currentUser._id.toString();
+        //             });
+        //             if (memberIndex !== -1) {
+        //                 _.each(member.teamMember, function(teamMember) {
+        //                     teamMember.type = $scope.tender.type;
+        //                     $scope.membersList.push(teamMember);
+        //                 });
+        //                 member.user.type = $scope.type;
+        //                 $scope.membersList.push(member.user);
+        //             }
+        //         });
+        //     }
+        // }
 
         $scope.builderTeam = _.filter($scope.membersList, {type: "builders"});
         $scope.clientTeam = _.filter($scope.membersList, {type: "clients"});
@@ -457,9 +457,6 @@ angular.module('buiiltApp').controller('projectTeamCtrl', function($rootScope, $
                     }],
                     contactBooks: ["contactBookService", function(contactBookService) {
                         return contactBookService.me().$promise;
-                    }],
-                    tenders: ["tenderService", "$stateParams", function(tenderService, $stateParams) {
-                        return tenderService.getAll({id: $stateParams.id}).$promise;
                     }]
                 },
     	      	templateUrl: 'app/modules/project/project-team/new/project-team-new.html',

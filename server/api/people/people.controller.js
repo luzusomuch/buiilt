@@ -10,6 +10,7 @@ var Tender = require('./../../models/tender.model');
 var _ = require('lodash');
 var async = require('async');
 var EventBus = require('../../components/EventBus');
+var config = require("../../config/environment/index");
 
 var populatePaths = [
     {path:"builders.tenderers._id", select: "_id email name phoneNumber"},
@@ -340,10 +341,10 @@ function filterCurrentTender(tenders, user) {
     function to response correctly logic with each project team type
 */
 function responseWithEachType(people, req, res){
-    var roles = ["builders", "clients", "architects", "subcontractors", "consultants"];
+    var roles = config.roles;
     var currentUserRole;
     var currentUserTender;
-    var isLeader = false;
+    // var isLeader = false;
     _.each(roles, function(role) {
         _.each(people[role], function(tender) {
             var index = _.findIndex(tender.tenderers, function(tenderer) {
@@ -353,7 +354,7 @@ function responseWithEachType(people, req, res){
             });
             if (index !== -1) {
                 currentUserRole = role;
-                isLeader = true;
+                // isLeader = true;
                 currentUserTender = tender;
                 return false;
             } else {
@@ -368,8 +369,11 @@ function responseWithEachType(people, req, res){
                 });
             }
         });
+        if (currentUserTender && currentUserRole) {
+            return false;
+        }
     });
-    if (isLeader) {
+    // if (isLeader) {
         if (people.project.projectManager.type === "builder") {
             switch (currentUserRole) {
                 case 'builders':
@@ -531,31 +535,31 @@ function responseWithEachType(people, req, res){
             }
             return res.send(200, people);
         }
-    } else {
-        Tender.find({project: req.params.id, status: "open", $or: [{owner: req.user._id}, {"members.user": req.user._id}, {"members.teamMember": req.user._id}]}, function(err, tenders) {
-            if (err || tenders.length === 0) {
-                var newRoles = roles;
-                if (currentUserRole) 
-                    newRoles.splice(roles.indexOf(currentUserRole),1);
-                _.each(newRoles, function(newRole) {
-                    people[newRole] = [];
-                });
-                return res.send(200, people);
-            } else {
-                var availabelTender;
-                _.each(people[tenders[0].ownerType], function(tender) {
-                    if (tender.hasSelect && tender.tenderers[0]._id._id.toString()==tenders[0].owner.toString()) {
-                        availabelTender = tender;
-                        return false;
-                    }
-                });
-                _.each(roles, function(role) {
-                    people[role] = [];
-                });
-                if (availabelTender)
-                    people[tenders[0].ownerType].push(availabelTender);
-                return res.send(200, people);
-            }
-        });
-    }
+    // } else {
+    //     Tender.find({project: req.params.id, status: "open", $or: [{owner: req.user._id}, {"members.user": req.user._id}, {"members.teamMember": req.user._id}]}, function(err, tenders) {
+    //         if (err || tenders.length === 0) {
+    //             var newRoles = roles;
+    //             if (currentUserRole) 
+    //                 newRoles.splice(roles.indexOf(currentUserRole),1);
+    //             _.each(newRoles, function(newRole) {
+    //                 people[newRole] = [];
+    //             });
+    //             return res.send(200, people);
+    //         } else {
+    //             var availabelTender;
+    //             _.each(people[tenders[0].ownerType], function(tender) {
+    //                 if (tender.hasSelect && tender.tenderers[0]._id._id.toString()==tenders[0].owner.toString()) {
+    //                     availabelTender = tender;
+    //                     return false;
+    //                 }
+    //             });
+    //             _.each(roles, function(role) {
+    //                 people[role] = [];
+    //             });
+    //             if (availabelTender)
+    //                 people[tenders[0].ownerType].push(availabelTender);
+    //             return res.send(200, people);
+    //         }
+    //     });
+    // }
 };
