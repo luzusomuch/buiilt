@@ -610,6 +610,9 @@ angular.module('buiiltApp').controller('projectCalendarCtrl', function($timeout,
                             $scope.projectMembers.splice(index, 1);
                         }
                     });
+
+                    // remove task owner from available assignees
+                    _.remove($scope.projectMembers, {_id: $scope.task.owner._id});
                 };
                 getProjectMembers();
 
