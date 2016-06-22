@@ -36,14 +36,11 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
     };
 
     function documentSetInitial() {
-        console.log($scope.documents);
         /*Check to allow added document set 1*/
         var index = _.findIndex($scope.documentSets, function(set) {
             return set.name==="Set 1" && set.notAllowEditOrCopy;
         });
-        console.log(index);
         if (index === -1 && $scope.documents.length > 0) {
-            console.log("AAAAAAAAAAAA");
             $scope.documentSets.push({name: "Set 1", documents: [], notAllowEditOrCopy: true});
             /*Add documents to document set 1 which haven't belong to any document set */
             _.each($scope.documents, function(document) {
@@ -53,24 +50,6 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
                 }
             });
         }
-
-        // var allowAddedSet1 = true;
-        // _.each($scope.documentSets, function(documentSet) {
-        //     if (documentSet.name==="Set 1" && documentSet.notAllowEditOrCopy) {
-        //         allowAddedSet1 = false;
-        //         return false;
-        //     }
-        // });
-        // if (allowAddedSet1) 
-        //     $scope.documentSets.push({name: "Set 1", documents: [], notAllowEditOrCopy: true});
-
-        // /*Add documents to document set 1 which haven't belong to any document set */
-        // _.each($scope.documents, function(document) {
-        //     if (!document.documentSet) {
-        //         document.project = (document.project._id) ? document.project._id : document.project;
-        //         $scope.documentSets[$scope.documentSets.length -1].documents.push(document);
-        //     }
-        // });
 
         /*Convert not member email to name base on contact books*/
         _.each($scope.documentSets, function(set) {
@@ -110,6 +89,9 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
 
 
     $scope.selectDocumentSet = function(documentSet) {
+        // Check if current user is belong to created team
+        $scope.isOwnerTeam = $rootScope.checkIsOwnerTeam(people, documentSet.owner);
+            
         $scope.selectedDocumentSet = documentSet;
         $rootScope.selectedDocumentSetId = $scope.selectedDocumentSetId = documentSet._id;
     };
@@ -133,9 +115,6 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
             });
             // remove the selected document owner from available assignees
             _.remove($scope.projectMembers, {_id: $rootScope.selectedDocumentSet.owner._id});
-
-            // Check if current user is belong to created team
-            $scope.isOwnerTeam = $rootScope.checkIsOwnerTeam(people, $rootScope.selectedDocumentSet.owner);
             // End Check
         }
     };
