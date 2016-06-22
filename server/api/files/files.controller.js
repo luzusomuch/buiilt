@@ -244,6 +244,8 @@ exports.show = function(req, res) {
                     if (_.findIndex(h.members, function(m) {
                         if (m._id) {
                             return m._id.toString()===req.user._id.toString();
+                        } else if (m.email) {
+                            return m.email===req.user.email;
                         }
                     }) !== -1) {
                         fileHistory.push(h);

@@ -18,7 +18,7 @@
 		
 			<!-- <div ng-show="!search && project.status=='waiting'" ng-repeat="project in projects | filter:{name: filter} track by $index"> -->
 		
-				<md-list-item class="md-2-line" md-ink-ripple ng-repeat="project in projects | filter:{name: filter} track by $index" ng-show="project.status=='waiting'">
+				<md-list-item class="md-2-line" md-ink-ripple ng-repeat="project in projects | filter:{name: filter} | unique:'name' track by $index" ng-show="project.status=='waiting'">
 				
 					<div class="md-list-item-text" ui-sref="project.overview({id: project._id})">
 			          	<h3>{{ project.name }} <span ng-show="project.__v > 0">({{project.__v}})</span></h3>
