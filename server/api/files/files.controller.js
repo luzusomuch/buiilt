@@ -238,21 +238,21 @@ exports.show = function(req, res) {
         Notification.find({"element._id": file._id, owner: req.user._id, unread: true, $or:[{type: "document-upload-reversion"}, {type: "file-upload-reversion"}, {type: "related-item"}]}, function(err, notifications) {
             if (err) {return res.send(500,err);}
             file.__v = notifications.length;
-            if (file.element.type==="document"&&file.owner._id.toString()!==req.user._id.toString()) {
-                var fileHistory = [];
-                _.each(file.fileHistory, function(h) {
-                    if (_.findIndex(h.members, function(m) {
-                        if (m._id) {
-                            return m._id.toString()===req.user._id.toString();
-                        } else if (m.email) {
-                            return m.email===req.user.email;
-                        }
-                    }) !== -1) {
-                        fileHistory.push(h);
-                    }
-                });
-                file.fileHistory = fileHistory;
-            }
+            // if (file.element.type==="document"&&file.owner._id.toString()!==req.user._id.toString()) {
+            //     var fileHistory = [];
+            //     _.each(file.fileHistory, function(h) {
+            //         if (_.findIndex(h.members, function(m) {
+            //             if (m._id) {
+            //                 return m._id.toString()===req.user._id.toString();
+            //             } else if (m.email) {
+            //                 return m.email===req.user.email;
+            //             }
+            //         }) !== -1) {
+            //             fileHistory.push(h);
+            //         }
+            //     });
+            //     file.fileHistory = fileHistory;
+            // }
             RelatedItem.responseWithRelated("file", file, req.user, res);
         });
     });
