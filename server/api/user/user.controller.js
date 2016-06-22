@@ -5,6 +5,7 @@ var ContactBook = require('./../../models/contactBook.model');
 var Task = require('./../../models/task.model');
 var Thread = require('./../../models/thread.model');
 var File = require('./../../models/file.model');
+var Documents = require('./../../models/document.model');
 var Notification = require('./../../models/notification.model');
 var NotificationHelper = require('./../../components/helpers/notification');
 
@@ -420,6 +421,19 @@ exports.create = function (req, res, next) {
                                 },cb);
                             });
                         },
+                        function (cb) {
+                            Documents.find({}, function(err, documents) {
+                                if (err) {cb();}
+                                async.each(documents, function(document, callback) {
+                                    var index = _.indexOf(document.notMembers, newUser.email);
+                                    if (index !== -1) {
+                                        document.members.push(newUser._id);
+                                        document.notMembers.splice(index, 1);
+                                    }
+                                    document.save(callback);
+                                }, cb);
+                            });
+                        }
                     ], function(err) {
                         if (err) {
                             newUser.remove(function(error) {

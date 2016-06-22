@@ -12,10 +12,10 @@ exports.check = function(members, item, cb) {
         notMembers: (item) ? item.notMembers : []
     };
     async.each(members, function(member, callback) {
-        User.findOne({email: member.email}, function(err, user) {
+        User.findOne({email: member.email.toLowerCase()}, function(err, user) {
             if (err) {callback(err);}
             if (!user) {
-                result.notMembers.push(member.email);
+                result.notMembers.push(member.email.toLowerCase());
                 callback(null);
             } else {
                 result.members.push(user._id);

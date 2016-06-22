@@ -14,7 +14,7 @@ exports.create = function(req, res) {
     } else {
         var result = [];
         async.each(data.contacts, function(contact, cb) {
-            User.findOne({email: contact.email})
+            User.findOne({email: contact.email.toLowerCase()})
             .populate("team._id").exec(function(err, user) {
                 if (err) {cb(err);}
                 if (!user) {
@@ -22,7 +22,7 @@ exports.create = function(req, res) {
                         team: req.user.team._id,
                         inviter: req.user._id,
                         name: contact.firstName + " " + contact.lastName,
-                        email: contact.email,
+                        email: contact.email.toLowerCase(),
                         phoneNumber: contact.phoneNumber,
                         // teamName: contact.teamName
                     });

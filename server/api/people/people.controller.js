@@ -175,11 +175,11 @@ exports.invitePeople = function(req, res) {
                                 createAt: new Date(),
                                 inviterType: (type == "consultants") ? invite.inviterType : null
                             };
-                            User.findOne({email: invite.email}, function(err, user) {
+                            User.findOne({email: invite.email.toLowerCase()}, function(err, user) {
                                 if (err) {cb(err);}
                                 else if (!user) {
                                     tender.tenderers.push({
-                                        email: invite.email,
+                                        email: invite.email.toLowerCase(),
                                         name: invite.name,
                                         phoneNumber: invite.phoneNumber,
                                         teamMember: []
