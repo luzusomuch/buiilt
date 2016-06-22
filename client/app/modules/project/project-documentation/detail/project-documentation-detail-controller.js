@@ -22,7 +22,7 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
         $scope.isOwnerTeam=true;
     }
 
-    getAcvititiesAndHistoriesByUser($scope.document);
+    // getAcvititiesAndHistoriesByUser($scope.document);
     
     /*Update last access for current document*/
     fileService.lastAccess({id: $stateParams.documentId}).$promise.then(function(data) {
@@ -104,7 +104,7 @@ angular.module('buiiltApp').controller('projectDocumentationDetailCtrl', functio
     socket.on("document:update", function(data) {
         originalDocument = angular.copy(data);
         $scope.document = data;
-        getAcvititiesAndHistoriesByUser($scope.document);
+        // getAcvititiesAndHistoriesByUser($scope.document);
         checkAcknowLedgement($scope.document);
         if (data._id.toString()===$stateParams.documentId.toString()) {
             notificationService.markItemsAsRead({id: $stateParams.documentId}).$promise.then();
