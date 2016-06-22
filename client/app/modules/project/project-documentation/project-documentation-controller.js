@@ -36,24 +36,41 @@ angular.module('buiiltApp').controller('projectDocumentationCtrl', function($q, 
     };
 
     function documentSetInitial() {
+        console.log($scope.documents);
         /*Check to allow added document set 1*/
-        var allowAddedSet1 = true;
-        _.each($scope.documentSets, function(documentSet) {
-            if (documentSet.name==="Set 1" && documentSet.notAllowEditOrCopy) {
-                allowAddedSet1 = false;
-                return false;
-            }
+        var index = _.findIndex($scope.documentSets, function(set) {
+            return set.name==="Set 1" && set.notAllowEditOrCopy;
         });
-        if (allowAddedSet1) 
+        console.log(index);
+        if (index === -1 && $scope.documents.length > 0) {
+            console.log("AAAAAAAAAAAA");
             $scope.documentSets.push({name: "Set 1", documents: [], notAllowEditOrCopy: true});
+            /*Add documents to document set 1 which haven't belong to any document set */
+            _.each($scope.documents, function(document) {
+                if (!document.documentSet) {
+                    document.project = (document.project._id) ? document.project._id : document.project;
+                    $scope.documentSets[$scope.documentSets.length -1].documents.push(document);
+                }
+            });
+        }
 
-        /*Add documents to document set 1 which haven't belong to any document set */
-        _.each($scope.documents, function(document) {
-            if (!document.documentSet) {
-                document.project = (document.project._id) ? document.project._id : document.project;
-                $scope.documentSets[$scope.documentSets.length -1].documents.push(document);
-            }
-        });
+        // var allowAddedSet1 = true;
+        // _.each($scope.documentSets, function(documentSet) {
+        //     if (documentSet.name==="Set 1" && documentSet.notAllowEditOrCopy) {
+        //         allowAddedSet1 = false;
+        //         return false;
+        //     }
+        // });
+        // if (allowAddedSet1) 
+        //     $scope.documentSets.push({name: "Set 1", documents: [], notAllowEditOrCopy: true});
+
+        // /*Add documents to document set 1 which haven't belong to any document set */
+        // _.each($scope.documents, function(document) {
+        //     if (!document.documentSet) {
+        //         document.project = (document.project._id) ? document.project._id : document.project;
+        //         $scope.documentSets[$scope.documentSets.length -1].documents.push(document);
+        //     }
+        // });
 
         /*Convert not member email to name base on contact books*/
         _.each($scope.documentSets, function(set) {
