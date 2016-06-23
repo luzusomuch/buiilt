@@ -26,7 +26,7 @@ var TaskSchema = new Schema({
         ref: 'User',
         default: []
     }],
-    notMembers: [String],
+    notMembers: [{type: String, lowercase: true}],
     description: {
         type: String,
         required: true

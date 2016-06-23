@@ -10,7 +10,7 @@ exports.validateCreate = function (req, cb) {
   async.each(req.body.members, function(member, cb) {
     User.findOne({email: member.email}, function(err, user) {
       if (err) {cb(err);}
-      else if (!user) {notMembers.push(member.email);cb();}
+      else if (!user) {notMembers.push(member.email.toLowerCase());cb();}
       else {members.push(user._id);cb();}
     })
   }, function() {
@@ -29,7 +29,7 @@ exports.validateUpdate = function (req, cb) {
     async.each(req.body.newMembers, function(member, cb) {
       User.findOne({email: member.email}, function(err, user) {
         if (err) {cb(err);}
-        else if (!user) {notMembers.push(member.email);cb();}
+        else if (!user) {notMembers.push(member.email.toLowerCase());cb();}
         else {members.push(user._id);cb();}
       })
     }, function() {

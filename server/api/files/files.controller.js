@@ -103,9 +103,9 @@ exports.assignMoreMembers = function(req, res) {
                     file.fileHistory[historyIndex].members.push({_id: member._id});
                     newMembers.push(member._id);
                 } else {
-                    file.activities[activityIndex].members.push({email: member.email});
-                    file.activities[activityIndex].acknowledgeUsers.push({email: member.email, isAcknow: false});
-                    file.fileHistory[historyIndex].members.push({email: member.email});
+                    file.activities[activityIndex].members.push({email: member.email.toLowerCase()});
+                    file.activities[activityIndex].acknowledgeUsers.push({email: member.email.toLowerCase(), isAcknow: false});
+                    file.fileHistory[historyIndex].members.push({email: member.email.toLowerCase()});
                 }
             });
         }
@@ -305,11 +305,11 @@ exports.update = function(req, res) {
                                         editType = "assign";
                                         var members = [];
                                         async.each(data.newMembers, function(member, cb) {
-                                            members.push(member.email);
-                                            User.findOne({email: member.email}, function(err, user) {
+                                            members.push(member.email.toLowerCase());
+                                            User.findOne({email: member.email.toLowerCase()}, function(err, user) {
                                                 if (err) {cb();}
                                                 else if (!user) {
-                                                    file.notMembers.push(member.email);
+                                                    file.notMembers.push(member.email.toLowerCase());
                                                     cb();
                                                 } else {
                                                     file.members.push(user._id);
@@ -366,11 +366,11 @@ exports.update = function(req, res) {
                             editType = "assign";
                             var members = [];
                             async.each(data.newMembers, function(member, cb) {
-                                members.push(member.email);
-                                User.findOne({email: member.email}, function(err, user) {
+                                members.push(member.email.toLowerCase());
+                                User.findOne({email: member.email.toLowerCase()}, function(err, user) {
                                     if (err) {cb();}
                                     else if (!user) {
-                                        file.notMembers.push(member.email);
+                                        file.notMembers.push(member.email.toLowerCase());
                                         cb();
                                     } else {
                                         file.members.push(user._id);

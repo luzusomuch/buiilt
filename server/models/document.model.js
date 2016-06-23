@@ -10,7 +10,7 @@ var DocumentSchema = new Schema({
     members: [{type: Schema.Types.ObjectId, ref: "User"}],
     project: {type: Schema.Types.ObjectId, ref: "Project", required: true},
     tender: {type: Schema.Types.ObjectId, ref: "Tender"},
-    notMembers: [String],
+    notMembers: [{type: String, lowercase: true}],
     createdAt: {type: Date, default: new Date()},
     archive: {type: Boolean, default: false},
     updatedAt: Date

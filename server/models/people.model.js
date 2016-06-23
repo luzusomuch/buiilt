@@ -37,7 +37,7 @@ var tender = {
         ],
         name: String,
         phoneNumber: String,
-        email: {type: String},
+        email: {type: String, lowercase: true},
         tenderFile: [{
             _id: {type: Schema.Types.ObjectId, ref: "File"},
             name: String,

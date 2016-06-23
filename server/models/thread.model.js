@@ -51,7 +51,7 @@ var ThreadSchema = new Schema({
     members : [{
         type : Schema.Types.ObjectId, ref : 'User'
     }],
-    notMembers: [String],
+    notMembers: [{type: String, lowercase: true}],
     activities: [{
         email: String,
         user: {type: Schema.Types.ObjectId, ref: "User"},

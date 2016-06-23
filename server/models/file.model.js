@@ -25,7 +25,7 @@ var FileSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     }],
-    notMembers: [String],
+    notMembers: [{type: String, lowercase: true}],
     path: {
         type: String // path to server
     },
