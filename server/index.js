@@ -24,9 +24,9 @@ var app = express();
 
 if (config.ssl) {
     var options = {
-        key: fs.readFileSync('server/ssl/buiilt-private.key'),
-        cert: fs.readFileSync('server/ssl/buiilt.com.au.crt'),
-        passphrase: '123456',
+        key: fs.readFileSync('../../etc/letsencrypt/live/buiilt.com.au/privkey.pem'),
+        cert: fs.readFileSync('../../etc/letsencrypt/live/buiilt.com.au/fullchain.pem'),
+        // passphrase: '123456',
         requestCert: false,
         rejectUnauthorized: true
     };
